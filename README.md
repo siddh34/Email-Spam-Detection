@@ -6,3 +6,7 @@
 ## Tools 
 * Google Colab for Model Training
 * VS Code for Website deployment
+
+## Future
+* More models can be added
+* Automatic detection can be applied
