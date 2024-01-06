@@ -1,260 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Email Filtering</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="{{ url_for('static', filename='assets/favicon.ico') }}"
-    />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link
-      href="{{ url_for('static', filename='css/styles.css') }}"
-      rel="stylesheet"
-    />
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<title>Email Filtering</title>
+		<link
+			rel="icon"
+			type="image/x-icon"
+			href="{{ url_for('static', filename='assets/favicon.ico') }}"
+		/>
+		<!-- Core theme CSS (includes Bootstrap)-->
+		<link
+			href="{{ url_for('static', filename='css/styles.css') }}"
+			rel="stylesheet"
+		/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</head>
+	<body id="page-top">
+		<!-- Navigation-->
+		<nav
+			class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
+			id="mainNav"
+		>
+			<div class="container px-4">
+				<a class="navbar-brand" href="#page-top">Email Filtering</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarResponsive"
+					aria-controls="navbarResponsive"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="#about">About</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#filterEmail">Filter Email</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#contact">Contact</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- Header-->
+		<header class="bg-primary bg-gradient text-white">
+			<div class="container px-4 text-center">
+				<h1 class="fw-bolder">Welcome to Email Filter</h1>
+				<p class="lead">
+					A model that predicts whether a given text is spam or not.
+				</p>
+				<a class="btn btn-lg btn-light" href="#filterEmail">Start scrolling!</a>
+			</div>
+		</header>
+		<!-- About section-->
+		<section id="about">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-8">
+						<h2>About this page</h2>
+						<p class="lead">
+							Our text-based spam filtering website utilizes advanced machine
+							learning techniques to accurately identify and filter out spam
+							messages from your inbox. With our powerful algorithms and
+							pre-trained models, we analyze the content of incoming texts to
+							determine their spam probability. Our system leverages
+							CountVectorizer and TfidfVectorizer data, along with models like
+							logistic regression, naive Bayes, and k-nearest neighbors, to
+							provide reliable predictions. By assessing the probabilities and
+							accumulated results, our system determines whether a text is spam
+							or not, ensuring that your inbox remains free from unwanted
+							messages. Trust our spam filtering website to keep your inbox
+							clean and safeguard your communication.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Services section-->
+		<section class="bg-light" id="filterEmail">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-8">
+						<h2>Email Filtering</h2>
+						<p>Suggestion</p>
+						<button
+							type="button"
+							class="btn btn-outline-success"
+							onclick="sendCorrectPrediction(0)"
+						>
+							Not Spam
+						</button>
+						<button
+							type="button"
+							class="btn btn-outline-danger"
+							onclick="sendCorrectPrediction(1)"
+						>
+							Spam
+						</button>
 
-  </head>
-  <body id="page-top">
-    <!-- Navigation-->
-    <nav
-      class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
-      id="mainNav"
-    >
-      <div class="container px-4">
-        <a class="navbar-brand" href="#page-top">Email Filtering</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarResponsive"
-          aria-controls="navbarResponsive"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="#about">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#filterEmail">Filter Email</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#contact">Contact</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <!-- Header-->
-    <header class="bg-primary bg-gradient text-white">
-      <div class="container px-4 text-center">
-        <h1 class="fw-bolder">Welcome to Email Filter</h1>
-        <p class="lead">
-          A model that predicts whether a given text is spam or not.
-        </p>
-        <a class="btn btn-lg btn-light" href="#filterEmail">Start scrolling!</a>
-      </div>
-    </header>
-    <!-- About section-->
-    <section id="about">
-      <div class="container px-4">
-        <div class="row gx-4 justify-content-center">
-          <div class="col-lg-8">
-            <h2>About this page</h2>
-            <p class="lead">
-              Our text-based spam filtering website utilizes advanced machine learning techniques to accurately identify and filter out spam messages from your inbox. With our powerful algorithms and pre-trained models, we analyze the content of incoming texts to determine their spam probability. Our system leverages CountVectorizer and TfidfVectorizer data, along with models like logistic regression, naive Bayes, and k-nearest neighbors, to provide reliable predictions. By assessing the probabilities and accumulated results, our system determines whether a text is spam or not, ensuring that your inbox remains free from unwanted messages. Trust our spam filtering website to keep your inbox clean and safeguard your communication.
-            </p>
+						<form>
+							<!-- Message input -->
+							<div class="form-outline mb-4">
+								<textarea
+									class="form-control"
+									id="form4Example3"
+									rows="4"
+									name="input-text"
+									placeholder="Email text"
+								></textarea>
+							</div>
 
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Services section-->
-    <section class="bg-light" id="filterEmail">
-      <div class="container px-4">
-        <div class="row gx-4 justify-content-center">
-          <div class="col-lg-8">
-            <h2>Email Filtering</h2>
-            <p>Suggestion</p>
-            <button type="button" class="btn btn-outline-success" onclick="sendCorrectPrediction(0)">Not Spam </button>
-<button type="button" class="btn btn-outline-danger" onclick="sendCorrectPrediction(1)">Spam</button>
-            <form>
-              <!-- Message input -->
-              <div class="form-outline mb-4">
-                <textarea
-                  class="form-control"
-                  id="form4Example3"
-                  rows="4"
-                  name="input-text"
-                  placeholder="Email text"
-                ></textarea>
-              </div>
+							<!-- Submit button -->
+							<button
+								type="submit"
+								id="filterEmail2"
+								class="btn btn-primary btn-block mb-4"
+							>
+								Send
+							</button>
+							<h2 id="final_result"></h2>
+						</form>
+						<canvas id="myChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Contact section-->
+		<section id="contact">
+			<div class="container px-4">
+				<div class="row gx-4 justify-content-center">
+					<div class="col-lg-8">
+						<h2>Contact us</h2>
+						<p class="lead">
+							Thank you for your interest ! We value your feedback, inquiries,
+							and suggestions. If you have any questions or would like to get in
+							touch with us, please feel free to reach out using the contact
+							details below:
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
 
-              <!-- Submit button -->
-              <button
-                type="submit"
-                id="filterEmail2"
-                class="btn btn-primary btn-block mb-4"
-              >
-                Send
-              </button>
-              <h2 id="final_result"></h2>
-            </form>
-            <canvas id="myChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Contact section-->
-    <section id="contact">
-      <div class="container px-4">
-        <div class="row gx-4 justify-content-center">
-          <div class="col-lg-8">
-            <h2>Contact us</h2>
-            <p class="lead">
-              Thank you for your interest ! We value your feedback, inquiries, and suggestions. If you have any questions or would like to get in touch with us, please feel free to reach out using the contact details below:
-            </p>
+		<footer class="py-5 bg-dark">
+			<div class="container px-4">
+				<p class="m-0 text-center text-white">Copyright &copy; 2023</p>
+			</div>
+		</footer>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-          </div>
-        </div>
-      </div>
-    </section>
+		<!-- Bootstrap core JS-->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- Core theme JS-->
+		<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+		<script>
+			const form = document.querySelector("form");
+			const filterEmail = document.querySelector("#filterEmail2");
+			let myChart;
 
-    <footer class="py-5 bg-dark">
-      <div class="container px-4">
-        <p class="m-0 text-center text-white">
-          Copyright &copy;  2023
-        </p>
-      </div>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+			form.addEventListener("submit", (event) => {
+				event.preventDefault(); // prevent the default form submission behavior
 
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    <script>
-      const form = document.querySelector("form");
-      const filterEmail = document.querySelector("#filterEmail2");
-      let myChart;
+				filterEmail.innerHTML = "Processing...";
 
-      form.addEventListener("submit", (event) => {
-        event.preventDefault(); // prevent the default form submission behavior
+				const data = new FormData(form); // create a new FormData object from the form
+				const url = "/process-text"; // the URL of your Flask backend endpoint
 
-        filterEmail.innerHTML="Processing...";
+				fetch(url, {
+					method: "POST",
+					body: data,
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						filterEmail.innerHTML = "send";
 
-        const data = new FormData(form); // create a new FormData object from the form
-        const url = "/process-text"; // the URL of your Flask backend endpoint
+						document.getElementById("final_result").innerHTML =
+							data.final_result;
+						const chartdata = {
+							labels: [
+								"LR (Count)",
+								"LR (TF-IDF)",
+								"NB (Count)",
+								"NB (TF-IDF)",
+								"KNN (Count)",
+								"KNN (TF-IDF)",
+								"RF (Count)",
+								"RF (TF-IDF)",
+								"SVC (Count)",
+								"SVC (TF-IDF)",
+							],
+							datasets: [
+								{
+									label: "Spam",
+									data: data.ones_prob,
+									backgroundColor: "rgba(75, 192, 192, 0.5)",
+									borderColor: "rgba(75, 192, 192, 1)",
+									borderWidth: 1,
+								},
+								{
+									label: "Not spam",
+									data: data.zeros_prob,
+									backgroundColor: "rgba(255, 99, 132, 0.5)",
+									borderColor: "rgba(255, 99, 132, 1)",
+									borderWidth: 1,
+								},
+							],
+						};
 
-        fetch(url, {
-          method: "POST",
-          body: data,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-                  filterEmail.innerHTML="send";
+						const options = {
+							scales: {
+								x: {
+									stacked: true,
+								},
+								y: {
+									stacked: true,
+									min: 0,
+									max: 1,
+									ticks: {
+										stepSize: 0.2,
+									},
+								},
+							},
+							plugins: {
+								title: {
+									display: true,
+									text: "Model Scores",
+								},
+								legend: {
+									position: "bottom",
+								},
+							},
+						};
 
-
-          document.getElementById("final_result").innerHTML=data.final_result;
-            const chartdata = {
-              labels: [
-                "LR (Count)",
-                "LR (TF-IDF)",
-                "NB (Count)",
-                "NB (TF-IDF)",
-                "KNN (Count)",
-                "KNN (TF-IDF)",
-                "RF (Count)",
-                "RF (TF-IDF)",
-                "SVC (Count)",
-                "SVC (TF-IDF)",
-              ],
-              datasets: [
-                {
-                  label: "Spam",
-                  data: data.ones_prob,
-                  backgroundColor: "rgba(75, 192, 192, 0.5)",
-                  borderColor: "rgba(75, 192, 192, 1)",
-                  borderWidth: 1,
-                },
-                {
-                  label: "Not spam",
-                  data: data.zeros_prob,
-                  backgroundColor: "rgba(255, 99, 132, 0.5)",
-                  borderColor: "rgba(255, 99, 132, 1)",
-                  borderWidth: 1,
-                },
-              ],
-            };
-
-            const options = {
-              scales: {
-                x: {
-                  stacked: true,
-                },
-                y: {
-                  stacked: true,
-                  min: 0,
-                  max: 1,
-                  ticks: {
-                    stepSize: 0.2,
-                  },
-                },
-              },
-              plugins: {
-                title: {
-                  display: true,
-                  text: "Model Scores",
-                },
-                legend: {
-                  position: "bottom",
-                },
-              },
-            };
-
-            const config = {
-              type: "bar",
-              data: chartdata,
-              options: options,
-            };
-      if (myChart) {
-        myChart.destroy();
-      }
-             myChart = new Chart(
-              document.getElementById("myChart"),
-              config
-            );
-          })
-          .catch((error) => {
-            console.error(error); // handle any errors that occur during the fetch request
-          });
-      });
-      function sendCorrectPrediction(prediction) {
-            console.log("Inside correct prediction");
-            $.ajax({
-                url: '/correctprediction',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ 'prediction': prediction }),
-                success: function(response) {
-                    console.log(response);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-    </script>
-  </body>
+						const config = {
+							type: "bar",
+							data: chartdata,
+							options: options,
+						};
+						if (myChart) {
+							myChart.destroy();
+						}
+						myChart = new Chart(document.getElementById("myChart"), config);
+					})
+					.catch((error) => {
+						console.error(error); // handle any errors that occur during the fetch request
+					});
+			});
+			function sendCorrectPrediction(prediction) {
+				console.log("Inside correct prediction");
+				$.ajax({
+					url: "/correctprediction",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify({ prediction: prediction }),
+					success: function (response) {
+						console.log(response);
+					},
+					error: function (error) {
+						console.log(error);
+					},
+				});
+			}
+		</script>
+	</body>
 </html>
