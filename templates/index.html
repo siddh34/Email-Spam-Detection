@@ -117,6 +117,13 @@
 						>
 							Gmail Api
 						</button>
+						<button
+							type="button"
+							class="btn btn-outline-secondary"
+							id="fetch-gmail-get-data"
+						>
+							fetch via gmail
+						</button>
 
 						<div id="inputContainer"></div>
 
@@ -178,6 +185,7 @@
 		<script>
 			const form = document.querySelector("form");
 			const gmailGetData = document.querySelector("#gmail-get-data");
+			const fetchGmailDataButton = document.querySelector("#fetch-gmail-get-data");
 			const filterEmail = document.querySelector("#filterEmail2");
 			const inputContainer = document.querySelector("#inputContainer");
 			const inputNameMap = {
@@ -189,9 +197,6 @@
 			let myChart;
 
 			gmailGetData.addEventListener("click", () => {
-				// TODO: check whether gmail-get-data button is toggled
-				// TODO: ask for credentials of gmail api
-				// TODO: get data from gmail api
 				isToggled = !isToggled;
 				if (isToggled) {
 					for (let i = 0; i < 3; i++) {
@@ -211,6 +216,15 @@
 					}
 				}
 			});
+
+			fetchGmailDataButton.addEventListener("click", ()=>{
+				if(!isToggled){
+					alert("Please click on Gmail Api button first");
+				}
+				else{
+					// Fill in the email text
+				}
+			})
 
 			form.addEventListener("submit", (event) => {
 
