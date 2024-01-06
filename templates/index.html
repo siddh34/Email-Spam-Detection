@@ -110,6 +110,13 @@
 						>
 							Spam
 						</button>
+						<button
+							type="button"
+							class="btn btn-outline-info"
+							id="gmail-get-data"
+						>
+							Gmail Api
+						</button>
 
 						<form>
 							<!-- Message input -->
@@ -168,10 +175,34 @@
 		<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 		<script>
 			const form = document.querySelector("form");
+			const gmailGetData = document.querySelector("#gmail-get-data");
 			const filterEmail = document.querySelector("#filterEmail2");
+      let isToggled = false;
 			let myChart;
-
+      
+      gmailGetData.addEventListener("click", () => {
+        isToggled = !isToggled;
+        if (isToggled) {
+          for (let i = 0; i < 3; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            document.body.appendChild(input);
+          }
+        } else {
+          const inputs = document.querySelectorAll('input');
+          inputs.forEach(input => {
+            document.body.removeChild(input);
+          });
+        }
+      });
+  
 			form.addEventListener("submit", (event) => {
+				// check whether gmail-get-data button is toggled
+
+				// ask for credentials of gmail api
+
+				// get data from gmail api
+
 				event.preventDefault(); // prevent the default form submission behavior
 
 				filterEmail.innerHTML = "Processing...";

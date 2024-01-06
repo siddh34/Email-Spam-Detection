@@ -10837,3 +10837,23 @@ section {
   padding-top: 9rem;
   padding-bottom: 9rem;
 }
+
+.btn-group-toggle {
+  display: inline-block;
+  margin: 5px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #212529;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-group-toggle:hover {
+  background-color: #e2e6ea;
+}
+
+.btn-group-toggle.active {
+  background-color: #e2e6ea;
+}
