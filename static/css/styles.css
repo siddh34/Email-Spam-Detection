@@ -10857,3 +10857,15 @@ section {
 .btn-group-toggle.active {
   background-color: #e2e6ea;
 }
+
+.mb-4 {
+  margin-bottom: 1.5rem; /* Adjust as needed */
+}
+
+.p-4 {
+  padding: 1.5rem; /* Adjust as needed */
+}
+
+.long-input {
+  width: 480px; /* Adjust as needed */
+}

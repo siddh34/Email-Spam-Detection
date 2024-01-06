@@ -118,6 +118,8 @@
 							Gmail Api
 						</button>
 
+						<div id="inputContainer"></div>
+
 						<form>
 							<!-- Message input -->
 							<div class="form-outline mb-4">
@@ -177,31 +179,41 @@
 			const form = document.querySelector("form");
 			const gmailGetData = document.querySelector("#gmail-get-data");
 			const filterEmail = document.querySelector("#filterEmail2");
-      let isToggled = false;
+			const inputContainer = document.querySelector("#inputContainer");
+			const inputNameMap = {
+				0: "Email Address",
+				1: "Client Secret",
+				2: "Enter your Client Id"
+			}
+			let isToggled = false;
 			let myChart;
-      
-      gmailGetData.addEventListener("click", () => {
-        isToggled = !isToggled;
-        if (isToggled) {
-          for (let i = 0; i < 3; i++) {
-            const input = document.createElement('input');
-            input.type = 'text';
-            document.body.appendChild(input);
-          }
-        } else {
-          const inputs = document.querySelectorAll('input');
-          inputs.forEach(input => {
-            document.body.removeChild(input);
-          });
-        }
-      });
-  
+
+			gmailGetData.addEventListener("click", () => {
+				// TODO: check whether gmail-get-data button is toggled
+				// TODO: ask for credentials of gmail api
+				// TODO: get data from gmail api
+				isToggled = !isToggled;
+				if (isToggled) {
+					for (let i = 0; i < 3; i++) {
+						const input = document.createElement("input");
+						input.type = "text";
+						input.placeholder = inputNameMap[i];
+						input.classList.add('mx-4');
+						input.classList.add('my-4');
+						if(i === 2) {
+							input.classList.add('long-input');
+						}
+						inputContainer.appendChild(input);
+					}
+				} else {
+					while (inputContainer.firstChild) {
+						inputContainer.removeChild(inputContainer.firstChild);
+					}
+				}
+			});
+
 			form.addEventListener("submit", (event) => {
-				// check whether gmail-get-data button is toggled
 
-				// ask for credentials of gmail api
-
-				// get data from gmail api
 
 				event.preventDefault(); // prevent the default form submission behavior
 
