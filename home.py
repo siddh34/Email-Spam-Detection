@@ -126,6 +126,14 @@ def correctprediction():
         joblib.dump('models/nb_tfidf_model.joblib')
     return jsonify(success=True)
 
+@app.route('/getEmailFromGmail', methods=['POST'])
+def getEmailFromGmail():
+    global input_text
+    data = request.get_json() # retrieve the data sent from JavaScript
+
+    # process the data using Python code for gmail api
+
+    return ""
 
 if __name__ == '__main__':
     app.run(debug=True)
