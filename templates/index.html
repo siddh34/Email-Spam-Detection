@@ -162,9 +162,9 @@
 						<h2>Contact us</h2>
 						<p class="lead">
 							Thank you for your interest ! We value your feedback, inquiries,
-							and suggestions. If you have any questions or would like to get in
-							touch with us, please feel free to reach out using the contact
-							details below:
+							and suggestions. If you have any questions or would like to get
+							inPOST touch with us, please feel free to reach out using the
+							contact details below:
 						</p>
 					</div>
 				</div>
@@ -185,14 +185,16 @@
 		<script>
 			const form = document.querySelector("form");
 			const gmailGetData = document.querySelector("#gmail-get-data");
-			const fetchGmailDataButton = document.querySelector("#fetch-gmail-get-data");
+			const fetchGmailDataButton = document.querySelector(
+				"#fetch-gmail-get-data"
+			);
 			const filterEmail = document.querySelector("#filterEmail2");
 			const inputContainer = document.querySelector("#inputContainer");
 			const inputNameMap = {
-				0: "Email Address",
-				1: "Client Secret",
-				2: "Enter your Client Id"
-			}
+				0: "Your Email Address",
+				1: "Enter your Client Id",
+				2: "Enter your Client Secret",
+			};
 			let isToggled = false;
 			let myChart;
 
@@ -201,13 +203,12 @@
 				if (isToggled) {
 					for (let i = 0; i < 3; i++) {
 						const input = document.createElement("input");
+						input.id = `${inputNameMap[i]}`;
 						input.type = "text";
 						input.placeholder = inputNameMap[i];
-						input.classList.add('mx-4');
-						input.classList.add('my-4');
-						if(i === 2) {
-							input.classList.add('long-input');
-						}
+						input.classList.add("mx-4");
+						input.classList.add("my-4");
+						input.classList.add("long-input");
 						inputContainer.appendChild(input);
 					}
 				} else {
@@ -217,18 +218,42 @@
 				}
 			});
 
-			fetchGmailDataButton.addEventListener("click", ()=>{
-				if(!isToggled){
+			fetchGmailDataButton.addEventListener("click", () => {
+				event.preventDefault();
+				if (!isToggled) {
 					alert("Please click on Gmail Api button first");
+				} else {
+					// GET REQUEST TO URL
+					const url = "/getEmailFromGmail";
+					const email = document.getElementById(`${inputNameMap[0]}`).value;
+					const clientSecret = document.getElementById(`${inputNameMap[2]}`).value;
+					const clientId = document.getElementById(`${inputNameMap[1]}`).value;
+					const data = {
+						email: email,
+						clientSecret: clientSecret,
+						clientId: clientId,
+					};
+
+					console.log(data);
+
+					fetch(url, {
+						method: "POST",
+						body: data,
+					})
+						.then((response) => response.json())
+						.then((data) => {
+							console.log(data);
+						})
+						.catch((error) => {
+							console.error(error);
+						});
+
+					// CHANGE TEXTAREA DATA
+					document.getElementById("form4Example3").value = "api route is working";
 				}
-				else{
-					// Fill in the email text
-				}
-			})
+			});
 
 			form.addEventListener("submit", (event) => {
-
-
 				event.preventDefault(); // prevent the default form submission behavior
 
 				filterEmail.innerHTML = "Processing...";

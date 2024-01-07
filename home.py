@@ -1,3 +1,4 @@
+import time
 from flask import Flask, render_template, jsonify, request
 import numpy as np
 import joblib
@@ -128,12 +129,7 @@ def correctprediction():
 
 @app.route('/getEmailFromGmail', methods=['POST'])
 def getEmailFromGmail():
-    global input_text
-    data = request.get_json() # retrieve the data sent from JavaScript
-
-    # process the data using Python code for gmail api
-
-    return ""
+    return jsonify({"message":"hi"})
 
 if __name__ == '__main__':
     app.run(debug=True)
