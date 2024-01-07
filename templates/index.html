@@ -6,8 +6,8 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
-		<meta name="description" content="" />
-		<meta name="author" content="" />
+		<meta name="description" content />
+		<meta name="author" content />
 		<title>Email Filtering</title>
 		<link
 			rel="icon"
@@ -194,6 +194,7 @@
 				0: "Your Email Address",
 				1: "Enter your Client Id",
 				2: "Enter your Client Secret",
+				3: "Project Id"
 			};
 			let isToggled = false;
 			let myChart;
@@ -201,7 +202,7 @@
 			gmailGetData.addEventListener("click", () => {
 				isToggled = !isToggled;
 				if (isToggled) {
-					for (let i = 0; i < 3; i++) {
+					for (let i = 0; i < 4; i++) {
 						const input = document.createElement("input");
 						input.id = `${inputNameMap[i]}`;
 						input.type = "text";
@@ -223,22 +224,28 @@
 				if (!isToggled) {
 					alert("Please click on Gmail Api button first");
 				} else {
-					// GET REQUEST TO URL
 					const url = "/getEmailFromGmail";
 					const email = document.getElementById(`${inputNameMap[0]}`).value;
-					const clientSecret = document.getElementById(`${inputNameMap[2]}`).value;
+					const clientSecret = document.getElementById(
+						`${inputNameMap[2]}`
+					).value;
 					const clientId = document.getElementById(`${inputNameMap[1]}`).value;
+					const projectId = document.getElementById(`${inputNameMap[3]}`).value;
 					const data = {
 						email: email,
 						clientSecret: clientSecret,
 						clientId: clientId,
+						projectId: projectId
 					};
 
 					console.log(data);
 
 					fetch(url, {
 						method: "POST",
-						body: data,
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(data),
 					})
 						.then((response) => response.json())
 						.then((data) => {
@@ -248,8 +255,8 @@
 							console.error(error);
 						});
 
-					// CHANGE TEXTAREA DATA
-					document.getElementById("form4Example3").value = "api route is working";
+					document.getElementById("form4Example3").value =
+						"api route is working";
 				}
 			});
 
