@@ -197,31 +197,39 @@ def getEmailFromGmail():
     with open("cred.json", "w") as f:
         json.dump(cred_json, f)
 
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    SCOPES = ["https://mail.google.com/"]
 
-    flow = InstalledAppFlow.from_client_secrets_file("./cred.json", SCOPES)
-    creds = flow.run_local_server(port=0)
+    try:
+        flow = InstalledAppFlow.from_client_secrets_file("./cred.json", SCOPES)
+        creds = flow.run_local_server(port=8082)
+    except Exception as e:
+        return jsonify({"message": "failure", "error": str(e)})
 
-    creds = Credentials.from_authorized_user_file("./cred.json")
-    service = build("gmail", "v1", credentials=creds)
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        results = service.users().labels().list(userId="me").execute()
+        labels = results.get("labels", [])
 
-    results = service.users().labels().list(userId="me").execute()
-    labels = results.get("labels", [])
+        results = (
+            service.users()
+            .messages()
+            .list(userId="me", labelIds=["INBOX"], maxResults=1)
+            .execute()
+        )
 
-    results = (
-        service.users()
-        .messages()
-        .list(userId="me", labelIds=["INBOX"], maxResults=1)
-        .execute()
-    )
+        messages = results.get("messages", [])
 
-    messages = results.get("messages", [])
-    if messages[0] == None:
-        return jsonify({"message": "failure"})
+        if not messages:
+            return jsonify({"message": "failure", "error": "No messages found"})
 
-    msg = service.users().messages().get(userId="me", id=messages[0]["id"]).execute()
+        msg = (
+            service.users().messages().get(userId="me", id=messages[0]["id"]).execute()
+        )
 
-    return jsonify({"message": "success", "data": f"{msg}"})
+        return jsonify({"message": "success", "data": msg["snippet"]} )
+
+    except Exception as e:
+        return jsonify({"message": "failure", "error": str(e)})
 
 
 if __name__ == "__main__":

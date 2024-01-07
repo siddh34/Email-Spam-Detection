@@ -194,7 +194,7 @@
 				0: "Your Email Address",
 				1: "Enter your Client Id",
 				2: "Enter your Client Secret",
-				3: "Project Id"
+				3: "Project Id",
 			};
 			let isToggled = false;
 			let myChart;
@@ -235,7 +235,7 @@
 						email: email,
 						clientSecret: clientSecret,
 						clientId: clientId,
-						projectId: projectId
+						projectId: projectId,
 					};
 
 					console.log(data);
@@ -247,16 +247,23 @@
 						},
 						body: JSON.stringify(data),
 					})
-						.then((response) => response.json())
-						.then((data) => {
-							console.log(data);
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error("Network response was not ok");
+							}
+							return response.json();
+						})
+						.then((newdata) => {
+							console.log("data", newdata);
+							console.log("msg: ", newdata["data"]);
+							document.getElementById("form4Example3").value = newdata["data"];
 						})
 						.catch((error) => {
-							console.error(error);
+							console.error(
+								"There has been a problem with your fetch operation:",
+								error
+							);
 						});
-
-					document.getElementById("form4Example3").value =
-						"api route is working";
 				}
 			});
 
