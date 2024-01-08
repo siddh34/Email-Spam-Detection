@@ -1,39 +1,46 @@
+import json
+import time
 from flask import Flask, render_template, jsonify, request
 import numpy as np
 import joblib
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 app = Flask(__name__)
-input_text = ''
-@app.route('/')
+input_text = ""
+
+
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/process-text', methods=['POST'])
+@app.route("/process-text", methods=["POST"])
 def process_text():
     global input_text
-    input_text = request.form.get('input-text')
+    input_text = request.form.get("input-text")
     print(input_text)
 
     # Load CountVectorizer and TfidfVectorizer data
-    vectorizer_count = joblib.load('vectorizer_count.joblib')
-    vectorizer_tfidf = joblib.load('vectorizer_tfidf.joblib')
+    vectorizer_count = joblib.load("vectorizer_count.joblib")
+    vectorizer_tfidf = joblib.load("vectorizer_tfidf.joblib")
     # Load the models for future use
 
-    loaded_knn_count_model = joblib.load('models/knn_count_model.joblib')
-    loaded_knn_tfidf_model = joblib.load('models/knn_tfidf_model.joblib')
+    loaded_knn_count_model = joblib.load("models/knn_count_model.joblib")
+    loaded_knn_tfidf_model = joblib.load("models/knn_tfidf_model.joblib")
 
-    loaded_lr_count_model = joblib.load('models/lr_count_model.joblib')
-    loaded_lr_tfidf_model = joblib.load('models/lr_tfidf_model.joblib')
+    loaded_lr_count_model = joblib.load("models/lr_count_model.joblib")
+    loaded_lr_tfidf_model = joblib.load("models/lr_tfidf_model.joblib")
 
-    loaded_nb_count_model = joblib.load('models/nb_count_model.joblib')
-    loaded_nb_tfidf_model = joblib.load('models/nb_tfidf_model.joblib')
+    loaded_nb_count_model = joblib.load("models/nb_count_model.joblib")
+    loaded_nb_tfidf_model = joblib.load("models/nb_tfidf_model.joblib")
 
-    loaded_rf_count_model = joblib.load('models/rf_count_model.joblib')
-    loaded_rf_tfidf_model = joblib.load('models/rf_tfidf_model.joblib')
+    loaded_rf_count_model = joblib.load("models/rf_count_model.joblib")
+    loaded_rf_tfidf_model = joblib.load("models/rf_tfidf_model.joblib")
 
-    loaded_svc_count_model = joblib.load('models/svc_count_model.joblib')
-    loaded_svc_tfidf_model = joblib.load('models/svc_tfidf_model.joblib')
+    loaded_svc_count_model = joblib.load("models/svc_count_model.joblib")
+    loaded_svc_tfidf_model = joblib.load("models/svc_tfidf_model.joblib")
 
     new_text = [input_text]
     new_text_count = vectorizer_count.transform(new_text)
@@ -62,9 +69,9 @@ def process_text():
 
     rf_count_scores = loaded_rf_count_model.predict_proba(new_text_count)
     rf_tfidf_scores = loaded_rf_tfidf_model.predict_proba(new_text_tfidf)
-    print(rf_tfidf_scores,type(rf_tfidf_scores))
-    svc_count_scores =  loaded_svc_count_model.predict_proba(new_text_count)
-    svc_tfidf_scores =  loaded_svc_tfidf_model.predict_proba(new_text_tfidf)
+    print(rf_tfidf_scores, type(rf_tfidf_scores))
+    svc_count_scores = loaded_svc_count_model.predict_proba(new_text_count)
+    svc_tfidf_scores = loaded_svc_tfidf_model.predict_proba(new_text_tfidf)
 
     zeros_prob = []
     ones_prob = []
@@ -83,49 +90,162 @@ def process_text():
 
     # , svc_count_zero, svc_tfidf_zero
     # , svc_count_one, svc_tfidf_one
-    zeros_prob.extend([lr_count_zero, lr_tfidf_zero, nb_count_zero, nb_tfidf_zero, knn_count_zero, knn_tfidf_zero, rf_count_zero, rf_tfidf_zero, svc_count_zero, svc_tfidf_zero])
-    ones_prob.extend([lr_count_one, lr_tfidf_one, nb_count_one, nb_tfidf_one, knn_count_one, knn_tfidf_one, rf_count_one, rf_tfidf_one, svc_count_one, svc_tfidf_one])
+    zeros_prob.extend(
+        [
+            lr_count_zero,
+            lr_tfidf_zero,
+            nb_count_zero,
+            nb_tfidf_zero,
+            knn_count_zero,
+            knn_tfidf_zero,
+            rf_count_zero,
+            rf_tfidf_zero,
+            svc_count_zero,
+            svc_tfidf_zero,
+        ]
+    )
+    ones_prob.extend(
+        [
+            lr_count_one,
+            lr_tfidf_one,
+            nb_count_one,
+            nb_tfidf_one,
+            knn_count_one,
+            knn_tfidf_one,
+            rf_count_one,
+            rf_tfidf_one,
+            svc_count_one,
+            svc_tfidf_one,
+        ]
+    )
     zeros_prob = [round(score.tolist()[0], 2) for score in zeros_prob]
     ones_prob = [round(label.tolist()[0], 2) for label in ones_prob]
     accumulate_result = []
     accumulate_result.extend(
-        [lr_count_prediction, lr_tfidf_prediction, nb_count_prediction, nb_tfidf_prediction, knn_count_prediction,
-         knn_tfidf_prediction, rf_count_prediction, rf_tfidf_prediction, svc_count_prediction, svc_tfidf_prediction,])
+        [
+            lr_count_prediction,
+            lr_tfidf_prediction,
+            nb_count_prediction,
+            nb_tfidf_prediction,
+            knn_count_prediction,
+            knn_tfidf_prediction,
+            rf_count_prediction,
+            rf_tfidf_prediction,
+            svc_count_prediction,
+            svc_tfidf_prediction,
+        ]
+    )
     accumulate_result = [round(label.tolist()[0], 2) for label in accumulate_result]
-    final_result = 'not spam' if accumulate_result.count(0) >= accumulate_result.count(1) else 'spam'
+    final_result = (
+        "not spam"
+        if accumulate_result.count(0) >= accumulate_result.count(1)
+        else "spam"
+    )
     print(zeros_prob, ones_prob, accumulate_result, final_result)
 
     # create a response dictionary with the scores
     response = {
-        'zeros_prob': zeros_prob,
-        'ones_prob': ones_prob,
-        'final_result': final_result,
+        "zeros_prob": zeros_prob,
+        "ones_prob": ones_prob,
+        "final_result": final_result,
     }
 
     return jsonify(response)
 
 
-@app.route('/correctprediction', methods=['POST'])
+@app.route("/correctprediction", methods=["POST"])
 def correctprediction():
     global input_text
-    data = request.get_json() # retrieve the data sent from JavaScript
+    data = request.get_json()  # retrieve the data sent from JavaScript
     # process the data using Python code
-    result = data['prediction']
+    result = data["prediction"]
     print(input_text)
     print(result)
-    vectorizer_count = joblib.load('vectorizer_count.joblib')
-    vectorizer_tfidf = joblib.load('vectorizer_tfidf.joblib')
+    vectorizer_count = joblib.load("vectorizer_count.joblib")
+    vectorizer_tfidf = joblib.load("vectorizer_tfidf.joblib")
     if input_text != "" and result:
         new_text_count = vectorizer_count.transform(input_text)
         new_text_tfidf = vectorizer_tfidf.transform(input_text)
-        loaded_nb_count_model = joblib.load('models/nb_count_model.joblib')
-        loaded_nb_tfidf_model = joblib.load('models/nb_tfidf_model.joblib')
-        loaded_nb_count_model.partial_fit(new_text_count,result,classes=[0,1])
+        loaded_nb_count_model = joblib.load("models/nb_count_model.joblib")
+        loaded_nb_tfidf_model = joblib.load("models/nb_tfidf_model.joblib")
+        loaded_nb_count_model.partial_fit(new_text_count, result, classes=[0, 1])
         loaded_nb_tfidf_model.partial_fit(new_text_tfidf, result, classes=[0, 1])
-        joblib.dump('models/nb_count_model.joblib')
-        joblib.dump('models/nb_tfidf_model.joblib')
+        joblib.dump("models/nb_count_model.joblib")
+        joblib.dump("models/nb_tfidf_model.joblib")
     return jsonify(success=True)
 
 
-if __name__ == '__main__':
+@app.route("/getCredentials", methods=["POST"])
+def getCredentials():
+    data = request.get_json()
+    email = data.get("email")
+    clientSecret = data.get("clientSecret")
+    clientId = data.get("clientId")
+    projectId = None
+
+    cred_json = {
+        "web": {
+            "client_id": clientId,
+            "project_id": projectId,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_secret": clientSecret,
+        }
+    }
+
+    with open("cred.json", "w") as f:
+        json.dump(cred_json, f)
+
+    SCOPES = ["https://mail.google.com/"]
+
+    try:
+        flow = InstalledAppFlow.from_client_secrets_file("./cred.json", SCOPES)
+        creds = flow.run_local_server(
+            port=8082, access_type="offline", prompt="consent"
+        )
+    except Exception as e:
+        return jsonify({"message": "failure", "error": str(e)})
+
+    # Save the credentials for the next endpoint
+    with open("creds.json", "w") as f:
+        f.write(creds.to_json())
+
+    return jsonify({"message": "success"})
+
+
+@app.route("/getEmailFromGmail", methods=["GET"])
+def getEmailFromGmail():
+    # Load the credentials from the previous endpoint
+    with open("./creds.json", "r") as f:
+        creds = Credentials.from_authorized_user_info(json.load(f))
+
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        results = service.users().labels().list(userId="me").execute()
+        labels = results.get("labels", [])
+
+        results = (
+            service.users()
+            .messages()
+            .list(userId="me", labelIds=["INBOX"], maxResults=1)
+            .execute()
+        )
+
+        messages = results.get("messages", [])
+
+        if not messages:
+            return jsonify({"message": "failure", "error": "No messages found"})
+
+        msg = (
+            service.users().messages().get(userId="me", id=messages[0]["id"]).execute()
+        )
+
+        return jsonify({"message": "success", "data": msg["snippet"]})
+
+    except Exception as e:
+        return jsonify({"message": "failure", "error": str(e)})
+
+
+if __name__ == "__main__":
     app.run(debug=True)
