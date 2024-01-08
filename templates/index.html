@@ -119,6 +119,13 @@
 						</button>
 						<button
 							type="button"
+							class="btn btn-outline-primary"
+							id="auth-gmail-get-data"
+						>
+							auth
+						</button>
+						<button
+							type="button"
 							class="btn btn-outline-secondary"
 							id="fetch-gmail-get-data"
 						>
@@ -190,6 +197,7 @@
 			);
 			const filterEmail = document.querySelector("#filterEmail2");
 			const inputContainer = document.querySelector("#inputContainer");
+			const authGmailGetData = document.querySelector("#auth-gmail-get-data");
 			const inputNameMap = {
 				0: "Your Email Address",
 				1: "Enter your Client Id",
@@ -219,6 +227,38 @@
 				}
 			});
 
+			authGmailGetData.addEventListener("click", () => {
+				if (!isToggled) {
+					alert("Please click on Gmail Api button first");
+				} else {
+					const url = "/getCredentials";
+					const email = document.getElementById(`${inputNameMap[0]}`).value;
+					const clientSecret = document.getElementById(
+						`${inputNameMap[2]}`
+					).value;
+					const clientId = document.getElementById(`${inputNameMap[1]}`).value;
+					const projectId = document.getElementById(`${inputNameMap[3]}`).value;
+					const data = {
+						clientSecret: clientSecret,
+						clientId: clientId,
+						projectId: projectId,
+					};
+
+					fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(data),
+					}).then((response) => {
+						if (!response.ok) {
+							throw new Error("Network response was not ok");
+						}
+						return response.json();
+					});
+				}
+			});
+
 			fetchGmailDataButton.addEventListener("click", () => {
 				event.preventDefault();
 				if (!isToggled) {
@@ -238,14 +278,11 @@
 						projectId: projectId,
 					};
 
-					console.log(data);
-
 					fetch(url, {
-						method: "POST",
+						method: "GET",
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify(data),
 					})
 						.then((response) => {
 							if (!response.ok) {

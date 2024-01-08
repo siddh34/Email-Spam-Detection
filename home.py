@@ -175,8 +175,8 @@ def correctprediction():
     return jsonify(success=True)
 
 
-@app.route("/getEmailFromGmail", methods=["POST"])
-def getEmailFromGmail():
+@app.route("/getCredentials", methods=["POST"])
+def getCredentials():
     data = request.get_json()
     email = data.get("email")
     clientSecret = data.get("clientSecret")
@@ -201,9 +201,24 @@ def getEmailFromGmail():
 
     try:
         flow = InstalledAppFlow.from_client_secrets_file("./cred.json", SCOPES)
-        creds = flow.run_local_server(port=8082)
+        creds = flow.run_local_server(
+            port=8082, access_type="offline", prompt="consent"
+        )
     except Exception as e:
         return jsonify({"message": "failure", "error": str(e)})
+
+    # Save the credentials for the next endpoint
+    with open("creds.json", "w") as f:
+        f.write(creds.to_json())
+
+    return jsonify({"message": "success"})
+
+
+@app.route("/getEmailFromGmail", methods=["GET"])
+def getEmailFromGmail():
+    # Load the credentials from the previous endpoint
+    with open("./creds.json", "r") as f:
+        creds = Credentials.from_authorized_user_info(json.load(f))
 
     try:
         service = build("gmail", "v1", credentials=creds)
@@ -226,7 +241,7 @@ def getEmailFromGmail():
             service.users().messages().get(userId="me", id=messages[0]["id"]).execute()
         )
 
-        return jsonify({"message": "success", "data": msg["snippet"]} )
+        return jsonify({"message": "success", "data": msg["snippet"]})
 
     except Exception as e:
         return jsonify({"message": "failure", "error": str(e)})
