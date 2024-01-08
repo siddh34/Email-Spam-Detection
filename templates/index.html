@@ -197,6 +197,7 @@
 			);
 			const filterEmail = document.querySelector("#filterEmail2");
 			const inputContainer = document.querySelector("#inputContainer");
+			const authGmailGetData = document.querySelector("#auth-gmail-get-data");
 			const inputNameMap = {
 				0: "Your Email Address",
 				1: "Enter your Client Id",
@@ -226,6 +227,27 @@
 				}
 			});
 
+			authGmailGetData.addEventListener("click", ()=>{
+				if(!isToggled){
+					alert("Please click on Gmail Api button first");
+				}
+				else{
+					const url = "/getEmailFromGmail";
+					const email = document.getElementById(`${inputNameMap[0]}`).value;
+					const clientSecret = document.getElementById(
+						`${inputNameMap[2]}`
+					).value;
+					const clientId = document.getElementById(`${inputNameMap[1]}`).value;
+					const projectId = document.getElementById(`${inputNameMap[3]}`).value;
+					const data = {
+						email: email,
+						clientSecret: clientSecret,
+						clientId: clientId,
+						projectId: projectId,
+					};
+				}
+			});
+
 			fetchGmailDataButton.addEventListener("click", () => {
 				event.preventDefault();
 				if (!isToggled) {
@@ -244,8 +266,6 @@
 						clientId: clientId,
 						projectId: projectId,
 					};
-
-					console.log(data);
 
 					fetch(url, {
 						method: "POST",
