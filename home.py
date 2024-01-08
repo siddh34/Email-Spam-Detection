@@ -201,7 +201,9 @@ def getCredentials():
 
     try:
         flow = InstalledAppFlow.from_client_secrets_file("./cred.json", SCOPES)
-        creds = flow.run_local_server(port=8082)
+        creds = flow.run_local_server(
+            port=8082, access_type="offline", prompt="consent"
+        )
     except Exception as e:
         return jsonify({"message": "failure", "error": str(e)})
 
@@ -215,10 +217,8 @@ def getCredentials():
 @app.route("/getEmailFromGmail", methods=["GET"])
 def getEmailFromGmail():
     # Load the credentials from the previous endpoint
-    with open("creds.json", "r") as f:
-        creds = google.oauth2.credentials.Credentials.from_authorized_user_info(
-            json.load(f)
-        )
+    with open("./creds.json", "r") as f:
+        creds = Credentials.from_authorized_user_info(json.load(f))
 
     try:
         service = build("gmail", "v1", credentials=creds)
