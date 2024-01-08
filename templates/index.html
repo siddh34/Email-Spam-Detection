@@ -227,12 +227,11 @@
 				}
 			});
 
-			authGmailGetData.addEventListener("click", ()=>{
-				if(!isToggled){
+			authGmailGetData.addEventListener("click", () => {
+				if (!isToggled) {
 					alert("Please click on Gmail Api button first");
-				}
-				else{
-					const url = "/getEmailFromGmail";
+				} else {
+					const url = "/getCredentials";
 					const email = document.getElementById(`${inputNameMap[0]}`).value;
 					const clientSecret = document.getElementById(
 						`${inputNameMap[2]}`
@@ -240,11 +239,23 @@
 					const clientId = document.getElementById(`${inputNameMap[1]}`).value;
 					const projectId = document.getElementById(`${inputNameMap[3]}`).value;
 					const data = {
-						email: email,
 						clientSecret: clientSecret,
 						clientId: clientId,
 						projectId: projectId,
 					};
+
+					fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(data),
+					}).then((response) => {
+						if (!response.ok) {
+							throw new Error("Network response was not ok");
+						}
+						return response.json();
+					});
 				}
 			});
 
@@ -268,11 +279,10 @@
 					};
 
 					fetch(url, {
-						method: "POST",
+						method: "GET",
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify(data),
 					})
 						.then((response) => {
 							if (!response.ok) {
